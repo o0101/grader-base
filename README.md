@@ -1,4 +1,5 @@
-![Grader.JS logo image](https://github.com/c9fe/graderjs/raw/master/.readme-assets/grader_logo.PNG)
+
+<p align=center><img alt="Grader.JS logo image" src=https://github.com/c9fe/graderjs/raw/master/.readme-assets/grader_logo.png></p>
 
 # This is Your Readme
 
@@ -557,4 +558,4 @@ Aside from a few methods marked `_serviceOnly`, the API is available on the serv
 
 -------------------
 
-# *Grader.JS!*
+# *MyAwesomeApp.JS!*
