@@ -19,7 +19,7 @@ But for now, I'll just leave this information about the tool you're using here, 
     $ graderjs my-new-app
   ```
 
-  Then, read the [getting started guide](https://github.com/c9fe/grader-base/blob/master/README.md) or see below for an Overview and a detailed API reference.
+  Then, read the [getting started guide](https://github.com/c9fe/graderjs/blob/master/README.md) or see below for an Overview and a detailed API reference.
 
 ## Overview
 
@@ -528,13 +528,13 @@ The format is:
 
 ```js
   module.exports = {
-    name: "My App's Name",
-    entry: "./app.js",
+    name: "My App's Name",            // what should your app be called?
+    entry: "./app.js",                // where should your app begin?
     author: {
       name: "my name",
       url: "https://github.com/my-github-username",
     },
-    desiredPort: 49666,
+    desiredPort: 49666,               // which port do you want your service to try to run on?
     version: "0.0.1",
     description: "Make Descriptions Great Again",
     source: "https://github.com/my-github-username/MyGraderApp",
@@ -543,7 +543,7 @@ The format is:
       url: "https://github.com/my-github-org-name"
     },
     apiOrigins: [],                   // exact origins allowed to call Service API via grader global,
-    DEBUG: false
+    DEBUG: false                      // true shows debugging information and keeps launch console open
   }
 ```
 
@@ -555,3 +555,6 @@ The binaries are built using `nexe`, which uses Node.JS runtimes which I pre-pac
 
 Aside from a few methods marked `_serviceOnly`, the API is available on the service side (Node.JS) and in the client (via the `grader` global in any UI windows). If you're loading 3rd-party content, you might not want to give them access to the `grader` global, so there is an `apiInUI` flag, as well as origin checks and an allowedOrigins whitelist, I'll implement in future.
 
+-------------------
+
+# *Grader.JS!*
