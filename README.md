@@ -81,11 +81,8 @@ But for now, I'll just leave this information about the tool you're using here, 
         fullscreen,         // UI window to fullscreen
         partscreen,         // UI window to part of screen
         getLayout,          // get window left, right, width, height and windowState
-
         openBlank,          // open a UI window to about:blank
-        writePage,          // like document.write if using a custom window control box, writes to the
-                            // iframe document inside that
-
+        writePage,          // sets the HTML content of the document
         getScreen,          // get screen dimensions
       },
 
@@ -109,7 +106,6 @@ But for now, I'll just leave this information about the tool you're using here, 
       },
 
       _serviceOnly: {       // can not be called from UI side
-                            
         getUI,              // returns the named UI object
         getApp,             // returns the App object
         publishAPI,         // publish an API to the API object
@@ -222,8 +218,8 @@ But for now, I'll just leave this information about the tool you're using here, 
   - fullscreen  
   - partscreen  
   - getLayout
-  - openBlank
-  - writePage
+  - openBlank (*not yet implemented*)
+  - writePage (*not yet implemented*)
   - getScreen
 
   **Important note about calling from Service or UI side** 
@@ -386,6 +382,52 @@ Returns a data URI for the "app favicon", which by convention is located in, `./
 #### .meta.getTitle
 
 Returns the app's title, in other words its name, specified by `CONFIG.name`.
+
+### Control Domain
+
+The Control Domain concerns itself with the control of the UI windows via the [Chrome DevTools protocol](https://chromedevtools.github.io/devtools-protocol/). It provides 3 methods that are, in short, a *micro library* for interacting with the Chrome Remote Debugging protocol that is exposed, they are:
+
+- send
+- on
+- off (*not yet implemented*)
+
+#### .control.send(commandName, params, UI)
+
+Sends a command to the DevTools protocol host of the UI identified by window. [All possible commands, their return values and their parameters are listed here](https://chromedevtools.github.io/devtools-protocol/). *Note that the calling convention between service-side and client-side code for API calls bearing a `UI` parameter is also respected here. See the detailed section above in the UI domain for further information about this calling convention.
+
+The function takes the following paramters:
+
+- **commandName**: `string`. Required. No default value. The name of the DevTools protocol command to send. The format is `<Domain>.<name>`, for example, "Page.addScriptToEvaluateOnNewDocument".
+- **params**: `object`. Required. No default value. If there are no parameters, you must send an empty object. Otherwise set the parameters require as evidenced in the DevTools protocol docs. 
+- **UI**. Optional. On the client-side defaults to the calling UI window. On the service side defaults ot the `default` UI window (if any). Otherwise, if provided, must be a string name of a UI window when called from the client side, or an actual UI window object when called from the service side. 
+
+UI-side Example, in `./src/public/index.html`:
+
+```html
+  <!-- html stuff !-->
+  <button onclick="grader.control.send('Runtime.evaluate', {expression:'console.log(`hello world`);'}, 'test-window')">Print to console in other UI</button>
+  <!-- html stuff !-->
+```
+
+Service-side Example, in `./src/app.js`:
+
+```js
+  const result = await Grader.control.send("Page.printToPDF", pdfOptions);
+```
+
+Returns the result of the command, if any, or an empty object if there is no result. If the requested command resulted in an error, then an object with the `error` property is returned bearing details of the error.
+
+#### .control.on(eventName, handlerFunction, UI)
+
+
+Listens for events from the DevTools protocol host of the UI identified by window. [All possible events and their properties are listed here](https://chromedevtools.github.io/devtools-protocol/). *Note that the calling convention between service-side and client-side code for API calls bearing a `UI` parameter is also respected here. See the detailed section above in the UI domain for further information about this calling convention.
+
+This command accepts the following parameters:
+
+- **eventName**: `string`. Required. No default value. The name of the DevTools protocol command to send. The format is `<Domain>.<name>`, for example, "Fetch.requestPaused".
+- **params**: `object`. Required. No default value. If there are no parameters, you must send an empty object. Otherwise set the parameters require as evidenced in the DevTools protocol docs. 
+- **UI**. Optional. On the client-side defaults to the calling UI window. On the service side defaults ot the `default` UI window (if any). Otherwise, if provided, must be a string name of a UI window when called from the client side, or an actual UI window object when called from the service side. 
+
 
 ## Configuration
 
