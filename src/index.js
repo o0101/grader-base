@@ -51,11 +51,9 @@
     },
 
     meta: {
-      publishAPI,         // publish an API into the UI context (requires apiInUI: true)
-
       getStartURL,        // gets the start URL for the app 
       getFavicon,         // gets a (or an optionally named) favicon as a data URL
-      getTitle,        // gets the app title
+      getTitle,           // gets the app title
     },
 
     control: {
@@ -72,6 +70,7 @@
     },
 
     _serviceOnly: {
+      publishAPI,         // publish an API into the UI context (requires apiInUI: true)
       getUI,
       getApp
     }
@@ -159,7 +158,7 @@ export default API;
     if ( ! App ) throw new TypeError(`Need to call API.go first to create App before opening additional windows.`);
 
     const {uis,ServicePort} = App;
-    const {uiName: name, keepService} = settings;
+    const {uiName: name, keepService, uriPath} = settings;
     const sessionId = Common.newSessionId();
     // do layout prep if requrested
       let layout;
@@ -183,7 +182,8 @@ export default API;
       ({UI,browser} = await Service.newBrowser({
         uis,
         ServicePort, sessionId, layout, name,
-        keepService
+        keepService,
+        uriPath
       }));
       // if not UI yet, this is the first so set it as default
       if ( ! App.UI ) {
@@ -389,13 +389,14 @@ export default API;
 
 // window functions part ii
   async function openBlank() {
-
+    throw new TypeError(`Not implemented yet.`);
   }
 
   async function writePage() {
-
+    throw new TypeError(`Not implemented yet.`);
   }
 
+// meta functions
   async function getStartURL(UI = App.UI) {
     return UI.startUrl;
   }
