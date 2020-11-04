@@ -66,7 +66,8 @@
       sleep,
       kv: save,                     // save a (key, value) pair
       k: load,                      // getrieve a key
-      d: del
+      d: del,
+      hasKey                        // returns a promise that resolves when a key is set
     },
 
     _serviceOnly: {
@@ -136,21 +137,6 @@ export default API;
         `Cannot API.say a console message because App Console has already closed.`
       );
     }
-  }
-
-// meta functions
-  async function publishAPI(apiRoot, slotName) {
-    // apiRoot is an object with properties that enumerate all the functions of that API
-    // e.g. if your API is "sendEmail", "checkReplies", your apiRoot is
-    // {sendEmail, checkReplies}
-    // you can overwrite built-in APIs (like uitl, ui, control and window)
-    // but we throw if you try to overwrite those APIs you publish
-    Object.defineProperty(API, slotName, {
-      get: () => apiRoot,
-      set() {
-        throw new TypeError(`API slot ${slotName} is already present and cannot be overwritten.`);
-      }
-    });
   }
 
 // window functions
@@ -545,6 +531,20 @@ export default API;
     }
 
 // service only functions (not available over the API bridge to UI)
+  function publishAPI(apiRoot, slotName) {
+    // apiRoot is an object with properties that enumerate all the functions of that API
+    // e.g. if your API is "sendEmail", "checkReplies", your apiRoot is
+    // {sendEmail, checkReplies}
+    // you can overwrite built-in APIs (like uitl, ui, control and window)
+    // but we throw if you try to overwrite those APIs you publish
+    Object.defineProperty(API, slotName, {
+      get: () => apiRoot,
+      set() {
+        throw new TypeError(`API slot ${slotName} is already present and cannot be overwritten.`);
+      }
+    });
+  }
+
   function getUI(name) {
     if ( ! App ) {
       throw new TypeError(`Cannot call getUI when App does not exist.`);

@@ -425,9 +425,100 @@ Listens for events from the DevTools protocol host of the UI identified by windo
 This command accepts the following parameters:
 
 - **eventName**: `string`. Required. No default value. The name of the DevTools protocol command to send. The format is `<Domain>.<name>`, for example, "Fetch.requestPaused".
-- **params**: `object`. Required. No default value. If there are no parameters, you must send an empty object. Otherwise set the parameters require as evidenced in the DevTools protocol docs. 
+- **handlerFunction**: `function`. Required. No default value. A function called when the event is received, it will be called with a single parameter, an object bearing the properties of the specified event.
 - **UI**. Optional. On the client-side defaults to the calling UI window. On the service side defaults ot the `default` UI window (if any). Otherwise, if provided, must be a string name of a UI window when called from the client side, or an actual UI window object when called from the service side. 
 
+*Note:* if your use of the DevTools protocol rquires access to a [`sessionId`](https://chromedevtools.github.io/devtools-protocol/tot/Target/#type-SessionID) then you can use the `ons()` method of a UI window object. This is the same as `.control.on()` except that the `handlerFunction` is called with an object `{params, sessionId}` instead of just `params`, therefore allowing you to get access to the `sessionId` from whence the event originated.
+
+### Util Domain
+
+The Util Domain concerns itself only with various utilities, that are cross-cutting concerns and may be useful and applicable in many places, such as across the client or service contexts. For example, `sleep` an async command to yield execution from an async function for a number of milliseconds before re-entering that function at the next statement, after that timeout has resolved. Apart from this, the Util domain provides access to a simple key value store that persists across UI windows (but not across app launches).
+
+The util domain has 4 methods, they are:
+
+- sleep
+- kv
+- k
+- d
+
+#### .util.sleep(milliseconds)
+
+Sleep a number of milliseconds before returning to the function. In practice the Node.JS event loop will perform other work (if there is any) at this time, before returning to continue executing your function at the next statement.
+
+#### .util.kv(key, value)
+
+Stores a (key, value) pair in the global key-value store. Keys are strings and values can be any object. But note that if the objects are not JSON stringify-able then they will not be able to be passed across the client-service divide. Only fully JSON strinify-able values can be passed between service and client sides.
+
+Also, the `kv()` command has non-intuitive behaviour when there is an existing key. It attempts to perform a pseudo merge, depending on the type of the value. For more details, see the code in, for example, [this revision](https://github.com/c9fe/grader-base/blob/master/src/index.js#L473).
+
+#### .util.k(key)
+
+Retrieves a value given a string key from the global key-value store. If the key is not present, returnsa undefined. *Note: that there is no way to tell the difference between a key being set to undefined and not being set at all, using this method.* 
+
+Returns the value, if any.
+
+#### .util.d(key)
+
+Deletes a value from the global key-value store.
+
+#### .util.hasKey(key)
+
+Returns a promise that resolves to true when the key is set. Useful to wait until a value has been set by an asynchronous process before retrieving it. *Note: that this method will return a promise that never resolves if the key is never set.* In other words, there is no timeout. If you need a timeout, implement on using, for example, `Promise.race`:
+
+```js
+  let available = false;
+  try {
+    available = await Promise.race([ 
+      Grader.util.hasKey('info'), 
+      new Promise((_, rej) => setTimeout(rej, 10000)) 
+    ]);
+  } catch(e) {
+    console.warn(`Timeout expired before value was available.`);
+  }
+```
+
+
+### _serviceOnly Domain
+
+The _serviceOnly domain handles all things that cannot be called from the client, either for security reasons, or because the objects returned can simply not be serialized to strings and passed between client and service usefully.
+
+It has 3 methods. They are:
+
+- publishAPI
+- getUI
+- getApp
+
+#### ._serviceOnly.publishAPI(apiRoot, slotName)
+
+Publishes an API so that it's available on the client side and the server side. 
+
+This function access the following parameters:
+
+- **apiRoot:** `object`. `apiRoot` is an object with properties that enumerate all the functions of that API. For example, if your API is "sendEmail", "checkReplies", your apiRoot is {sendEmail, checkReplies}. Also note that you can overwrite built-in APIs (like uitl, ui, control and window) using this method, but we throw if you try to overwrite those APIs you publish.
+- **slotName:** `string`. Required. No default value. The name of the slot on the global API object where your API will go. For example, if your slotname is `fb`, your API will be accessible at `Grader.fb.login` on the service side and `grader.fb.long` on the client.
+
+*Note: in future we will provide a way to restrict published API access to only service or client sides.
+
+#### ._serviceOnly.getUI(name)
+
+Returns a UI window object given its name. 
+
+This method accepts the follow parameter:
+
+- **name**: `string`. No default. Required. The name of the UI window (the `uiName` parameter passed to `go()` or `ui.open()` when the UI window was created.
+
+*Note: this method throws if the name does not exist, or if the app has not been created yet (i.e., if the app is still launching and such as when Grader.go has not yet returned.)*
+
+**The UI window object** has the following properties:
+
+- on, same as the `.control.on` method above.
+- send, same as the `.control.send` method above.
+- ons, similar to `.control.on` but provides access to the DevTools `sessionId` of the event source. In other words, event notifications are packaged as `{params, sessionId}` 
+- disconnect, this method closes the channel between the service and the actual GUI window. In effect, it closes the websocket, disconnecting the DevTools protocol client from the DevTools host. Grader detects this and shuts the GUI window, possibly closing the whole app.
+
+#### ._serviceOnly.getApp()
+
+Returns an `<App>` object, or throws if the app has not yet been created, such as if Grader.go has not yet returned or the app is still launching.
 
 ## Configuration
 
