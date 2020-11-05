@@ -5,7 +5,7 @@ module.exports = {
     name: "my name",
     url: "https://github.com/my-github-username",
   },
-  desiredPort: 49666,
+  desiredPort: 49667,
   version: "0.0.1",
   description: "A Beautiful Demonstration of Just a Tiny Fraction of The Amazing Benevolence Which Grader Hath To Offer",
   source: "https://github.com/my-github-username/MyGraderApp",
