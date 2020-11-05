@@ -435,12 +435,13 @@ This command accepts the following parameters:
 
 The Util Domain concerns itself only with various utilities, that are cross-cutting concerns and may be useful and applicable in many places, such as across the client or service contexts. For example, `sleep` an async command to yield execution from an async function for a number of milliseconds before re-entering that function at the next statement, after that timeout has resolved. Apart from this, the Util domain provides access to a simple key value store that persists across UI windows (but not across app launches).
 
-The util domain has 4 methods, they are:
+The util domain has 5 methods, they are:
 
 - sleep
 - kv
 - k
 - d
+- hasKey
 
 #### .util.sleep(milliseconds)
 
