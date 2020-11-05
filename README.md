@@ -103,7 +103,8 @@ But for now, I'll just leave this information about the tool you're using here, 
         sleep,
         kv: save,           // save a (key, value) pair
         k: load,            // getrieve a key
-        d: del              // delete a key
+        d: del,             // delete a key
+        hasKey              // returns a promise that resolves to true when the key is set
       },
 
       _serviceOnly: {       // can not be called from UI side
