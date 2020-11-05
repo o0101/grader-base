@@ -559,4 +559,4 @@ Aside from a few methods marked `_serviceOnly`, the API is available on the serv
 
 -------------------
 
-# *MyAwesomeApp.JS!*
+## *MyAwesomeApp.JS!*
