@@ -103,7 +103,8 @@ But for now, I'll just leave this information about the tool you're using here, 
         sleep,
         kv: save,           // save a (key, value) pair
         k: load,            // getrieve a key
-        d: del              // delete a key
+        d: del,             // delete a key
+        hasKey              // returns a promise that resolves to true when the key is set
       },
 
       _serviceOnly: {       // can not be called from UI side
@@ -435,12 +436,13 @@ This command accepts the following parameters:
 
 The Util Domain concerns itself only with various utilities, that are cross-cutting concerns and may be useful and applicable in many places, such as across the client or service contexts. For example, `sleep` an async command to yield execution from an async function for a number of milliseconds before re-entering that function at the next statement, after that timeout has resolved. Apart from this, the Util domain provides access to a simple key value store that persists across UI windows (but not across app launches).
 
-The util domain has 4 methods, they are:
+The util domain has 5 methods, they are:
 
 - sleep
 - kv
 - k
 - d
+- hasKey
 
 #### .util.sleep(milliseconds)
 
@@ -558,4 +560,4 @@ Aside from a few methods marked `_serviceOnly`, the API is available on the serv
 
 -------------------
 
-# *MyAwesomeApp.JS!*
+## *MyAwesomeApp.JS!*
