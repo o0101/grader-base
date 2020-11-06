@@ -5,7 +5,7 @@ import {sleep} from './lib/common.js';
 start();
 
 async function start() {
-  await Grader.go();
+  await Grader.go({uiName:'1'});
 }
 
 async function startDemo() {
