@@ -5,6 +5,10 @@ import {sleep} from './lib/common.js';
 start();
 
 async function start() {
+  await Grader.go();
+}
+
+async function startDemo() {
   // create App
     await Grader.go({noWindow:true});
 
