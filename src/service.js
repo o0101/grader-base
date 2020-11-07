@@ -688,7 +688,8 @@
     desiredPort, 
     addHandlers: addHandlers = null, 
     noStandard: noStandard = false, 
-    server: server = null
+    server: server = null,
+    isRetry: isRetry = false
   }) {
     let service;
 
@@ -699,6 +700,11 @@
 
     if ( server ) {
       service = server;
+      try {
+        service.close();
+      } catch(e) {
+        DEBUG && console.info(`Service already closed`, e);
+      }
     } else {
       // not using a custom server, so add handlers to the express app
         if ( ! noStandard ) {
@@ -717,15 +723,16 @@
       service = http.createServer(app);
     }
 
-    // track success and failure and link the the promise we will return
-      service.on('error', retryServer);
-      service.on('listening', () => {
-        upAt = new Date;
-        say({serviceUp:{upAt,port}});
-        console.log(`Ready`);
-        return resolve({service, upAt, port});
-      });
-
+    if ( ! isRetry ) {
+      // track success and failure and link the the promise we will return
+        service.on('error', retryServer);
+        service.on('listening', () => {
+          upAt = new Date;
+          say({serviceUp:{upAt,port}});
+          console.log(`Ready`);
+          return resolve({service, upAt, port});
+        });
+    }
 
     DEBUG && console.log({requestStartService: port});
 
@@ -740,7 +747,7 @@
       // port is used
       sock.on('connect', retryServer);
       // port is unused
-      sock.on('error', resolveOK);
+      sock.on('error', attemptListen);
       sock.connect(port);
 
     return pr;
@@ -750,7 +757,7 @@
       if ( retryCount++ < MAX_RETRY ) {
         console.log({retry:{retryCount, badPort: port, DEBUG, err}});
         safe_notify(`${port} taken. Trying new port...`);
-        const subsequentTry = start({app, desiredPort: randomPort()});
+        const subsequentTry = start({app, desiredPort: randomPort(), isRetry: true, server: service});
         subsequentTry.then(resolve).catch(reject);
       } else {
         reject({err, message: `Retries exceeded and: ${err || 'no further information'}`});
@@ -758,7 +765,7 @@
       return;
     }
 
-    async function resolveOK() {
+    async function attemptListen() {
       try {
         service.listen(Number(port));
       } catch(e) {
