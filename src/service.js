@@ -3,6 +3,7 @@
     import fs from 'fs';
     import path from 'path';
     import http from 'http';
+    import net from 'net';
 
   // 3rd party
     import express from 'express';
@@ -725,18 +726,22 @@
         return resolve({service, upAt, port});
       });
 
+
     DEBUG && console.log({requestStartService: port});
 
-    try {
-      service.listen(Number(port));
-    } catch(e) {
-      DEBUG && console.log(`Error at service.listen`, e);
-      retryServer(e); 
-    }
-
-    if ( PORT_DEBUG ) {
-      retryServer('debugging PORT_DEBUG');
-    }
+    // the following additional checks are necessary for windows
+      // because I noticed that I can create a server that is listening
+      // on a port which is already occupied (seen via netstat -abno)
+      // and no error is thrown
+      // but I found that I can detect an unused port by trying to create
+      // a socket connection to it and if the connection fails it is unused
+      // or at least it's worth trying
+      const sock = new net.Socket();
+      // port is used
+      sock.on('connect', retryServer);
+      // port is unused
+      sock.on('error', resolveOK);
+      sock.connect(port);
 
     return pr;
 
@@ -751,6 +756,19 @@
         reject({err, message: `Retries exceeded and: ${err || 'no further information'}`});
       }
       return;
+    }
+
+    async function resolveOK() {
+      try {
+        service.listen(Number(port));
+      } catch(e) {
+        DEBUG && console.log(`Error at service.listen`, e);
+        retryServer(e); 
+      }
+
+      if ( PORT_DEBUG ) {
+        retryServer('debugging PORT_DEBUG');
+      }
     }
   }
 
