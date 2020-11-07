@@ -2,9 +2,10 @@
   // node builtin
     import fs from 'fs';
     import path from 'path';
-    import express from 'express';
+    import http from 'http';
 
   // 3rd party
+    import express from 'express';
     import {createHttpTerminator} from 'http-terminator';
 
   // 3rd party customized and added to repo
@@ -693,49 +694,53 @@
     let upAt, resolve, reject;
     const pr = new Promise((res, rej) => (resolve = res, reject = rej));
 
-    let port = desiredPort;
+    let port = Number(desiredPort);
 
     if ( server ) {
       service = server;
-      service.listen(Number(port), async err => {
-        if ( PORT_DEBUG || err ) { 
-          console.warn(err);
-          return reject(err);
-        } 
-        upAt = new Date;
-        say({serviceUp:{upAt,port}});
-        resolve({service, upAt, port});
-        console.log(`Ready`);
-      });
     } else {
-      if ( ! noStandard ) {
-        addStandardHandlers(app);
-      }
-
-      DEBUG && console.log({startService: port});
-
-      if ( addHandlers ) {
-        try {
-          addHandlers(app);
-        } catch(e) {
-          console.info(`Error adding handlers to app`, app, addHandlers, e); 
-          reject(new TypeError(`Supplied addHandlers function threw error: ${e}`));
+      // not using a custom server, so add handlers to the express app
+        if ( ! noStandard ) {
+          addStandardHandlers(app);
         }
-      }
 
-      service = app.listen(Number(port), async err => {
-        if ( PORT_DEBUG || err ) { 
-          console.warn(err);
-          return reject(err);
-        } 
-        upAt = new Date;
-        say({serviceUp:{upAt,port}});
-        resolve({service, upAt, port});
-        console.log(`Ready`);
-      });
+        if ( addHandlers ) {
+          try {
+            addHandlers(app);
+          } catch(e) {
+            console.info(`Error adding handlers to app`, app, addHandlers, e); 
+            reject(new TypeError(`Supplied addHandlers function threw error: ${e}`));
+          }
+        }
+
+      service = http.createServer(app);
     }
 
-    service.on('error', async err => {
+    // track success and failure and link the the promise we will return
+      service.on('error', retryServer);
+      service.on('listening', () => {
+        upAt = new Date;
+        say({serviceUp:{upAt,port}});
+        console.log(`Ready`);
+        return resolve({service, upAt, port});
+      });
+
+    DEBUG && console.log({requestStartService: port});
+
+    try {
+      service.listen(Number(port));
+    } catch(e) {
+      DEBUG && console.log(`Error at service.listen`, e);
+      retryServer(e); 
+    }
+
+    if ( PORT_DEBUG ) {
+      retryServer('debugging PORT_DEBUG');
+    }
+
+    return pr;
+
+    async function retryServer(err) {
       await sleep(10);
       if ( retryCount++ < MAX_RETRY ) {
         console.log({retry:{retryCount, badPort: port, DEBUG, err}});
@@ -746,9 +751,7 @@
         reject({err, message: `Retries exceeded and: ${err || 'no further information'}`});
       }
       return;
-    });
-
-    return pr;
+    }
   }
 
 // helper functions
