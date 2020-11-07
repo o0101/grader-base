@@ -700,30 +700,27 @@
 
     if ( server ) {
       service = server;
-      try {
-        service.close();
-      } catch(e) {
-        DEBUG && console.info(`Service already closed`, e);
-      }
     } else {
-      // not using a custom server, so add handlers to the express app
-        if ( ! noStandard ) {
-          addStandardHandlers(app);
-        }
-
-        if ( addHandlers ) {
-          try {
-            addHandlers(app);
-          } catch(e) {
-            console.info(`Error adding handlers to app`, app, addHandlers, e); 
-            reject(new TypeError(`Supplied addHandlers function threw error: ${e}`));
+      if ( ! isRetry ) {
+        // not using a custom server, so add handlers to the express app
+          if ( ! noStandard ) {
+            addStandardHandlers(app);
           }
-        }
+
+          if ( addHandlers ) {
+            try {
+              addHandlers(app);
+            } catch(e) {
+              console.info(`Error adding handlers to app`, app, addHandlers, e); 
+              reject(new TypeError(`Supplied addHandlers function threw error: ${e}`));
+            }
+          }
+      }
 
       service = http.createServer(app);
     }
 
-    if ( ! isRetry ) {
+    if ( !(server && isRetry) ) {
       // track success and failure and link the the promise we will return
         service.on('error', retryServer);
         service.on('listening', () => {
@@ -757,7 +754,7 @@
       if ( retryCount++ < MAX_RETRY ) {
         console.log({retry:{retryCount, badPort: port, DEBUG, err}});
         safe_notify(`${port} taken. Trying new port...`);
-        const subsequentTry = start({app, desiredPort: randomPort(), isRetry: true, server: service});
+        const subsequentTry = start({app, desiredPort: randomPort(), isRetry: true, server });
         subsequentTry.then(resolve).catch(reject);
       } else {
         reject({err, message: `Retries exceeded and: ${err || 'no further information'}`});
