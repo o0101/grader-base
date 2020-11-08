@@ -18,7 +18,7 @@ Click ["Use This Template"](https://github.com/c9fe/grader-base) on this base-re
 npm i
 ```
 
-## Get Started
+## or Get Started from npm
 
   Use npm to get the [Grader.JS tool](https://github.com/c9fe/graderjs) to automatically populate your new grader app.
 
