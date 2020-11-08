@@ -10,6 +10,13 @@ But for now, I'll just leave this information about the tool you're using here, 
 # [Grader.JS](https://github.com/c9fe/graderjs)
 
 **Grader.JS**, or just **Grader**, is a tool to help you build accessible, cross-platform desktop app binaries in Node.JS, JavaScript, HTML and CSS, without the bloat of Electron, the headaches of Qt or the pernicious dorsal enemas of Babylon.Perl
+# Get Started from GitHub
+
+Click ["Use This Template"](https://github.com/c9fe/grader-base) on this base-repo and you will have a new repo, then clone it to your workspace and `cd` into it, and run:
+
+```sh
+npm i
+```
 
 ## Get Started
 
