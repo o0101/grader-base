@@ -13,7 +13,7 @@ But for now, I'll just leave this information about the tool you're using here, 
 
 Copyright (c) 2020, Dosyago and/or its affiliates. All rights reserved.
 
-This is a release of Grader, an cross-platform app builder.
+This is a release of grader-base, the template for Grader, a cross-platform app builder, and all apps built with Grader.
 
 License information can be found in the LICENSE file.
 
