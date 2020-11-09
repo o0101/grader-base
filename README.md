@@ -9,6 +9,16 @@ But for now, I'll just leave this information about the tool you're using here, 
 
 # [Grader.JS](https://github.com/c9fe/graderjs)
 
+## License 
+
+Copyright (c) 2020, Dosyago and/or its affiliates. All rights reserved.
+
+This is a release of Grader, an cross-platform app builder.
+
+License information can be found in the LICENSE file.
+
+This software is dual-licensed. For information about commercial licensing, see [Dosyago Commercial License for OEMs, ISVs and VARs](https://github.com/dosyago/dual-licensing).
+
 **Grader.JS**, or just **Grader**, is a tool to help you build accessible, cross-platform desktop app binaries in Node.JS, JavaScript, HTML and CSS, without the bloat of Electron, the headaches of Qt or the pernicious dorsal enemas of Babylon.Perl
 # Get Started from GitHub
 
