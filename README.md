@@ -7,11 +7,28 @@ You probably want to fill it out with useful information about your new cross-pl
 
 But for now, I'll just leave this information about the tool you're using here, to help you.
 
-# [Grader.JS](https://github.com/c9fe/graderjs)
+# [Grader.JS](https://github.com/c9fe/graderjs) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2Fgrader-base&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Nov%209%202020&edge_flat=false)](https://hits.seeyoufarm.com) 
+
+## License 
+
+Copyright (c) 2020, Dosyago and/or its affiliates. All rights reserved.
+
+This is a release of grader-base, the template for Grader, a cross-platform app builder, and all apps built with Grader.
+
+License information can be found in the LICENSE file.
+
+This software is dual-licensed. For information about commercial licensing, see [Dosyago Commercial License for OEMs, ISVs and VARs](https://github.com/dosyago/dual-licensing).
 
 **Grader.JS**, or just **Grader**, is a tool to help you build accessible, cross-platform desktop app binaries in Node.JS, JavaScript, HTML and CSS, without the bloat of Electron, the headaches of Qt or the pernicious dorsal enemas of Babylon.Perl
+# Get Started from GitHub
 
-## Get Started
+Click ["Use This Template"](https://github.com/c9fe/grader-base) on this base-repo and you will have a new repo, then clone it to your workspace and `cd` into it, and run:
+
+```sh
+npm i
+```
+
+## or Get Started from npm
 
   Use npm to get the [Grader.JS tool](https://github.com/c9fe/graderjs) to automatically populate your new grader app.
 
