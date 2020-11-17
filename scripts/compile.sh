@@ -4,7 +4,7 @@ set -e
 
 source ~/.nvm/nvm.sh
 
-nvm use v12.10.0
+nvm use v12.16.2
 
 npm run clean
 
@@ -21,15 +21,12 @@ cd ../
 ./scripts/webzip.js
 
 # bundle a node inside (hopefully a temporary fix)
-# cp ~/.nvm/versions/node/v12.10.0/bin/node build/
 
 cp src/config.js build/
 
 npm run build
 
 chmod +x build/grader.js
-
-#cp -r build ~/
 
 # rename to app name
 source name.txt
