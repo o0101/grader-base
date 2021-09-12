@@ -11,10 +11,10 @@ npx webpack
 
 cd ../
 
-./scripts/webzip.js
+node -r esm ./scripts/webzip.js
 
 npx webpack 
 
-chmod +x build/grader.js
+chmod +x build/grader.cjs
 
-./build/grader.js
+./build/grader.mjs

@@ -1,38 +1,45 @@
 {
-  "name": "@my-user-name/my-app",
-  "version": "1.0.2",
+  "name": "@my-npm-name/@my-app-name",
+  "version": "2.1.0",
   "description": "My new Grader App! This is the Grader.JS base template repository. You can customize this package.json and other files to start building your app. See the README for how to.",
   "main": "src/launcher.js",
   "bin": {
-    "myapp": "build/grader.js"
+    "myapp": "build/grader.cjs"
   },
   "scripts": {
     "stats": "npm run super-clean && getstats && cat stats/* || :",
     "super-clean": "npm run clean || : && rm -rf node_modules || :",
     "upgrade": "npm run super-clean || : && npm upgrade && npm i",
     "postinstall": "bash ./scripts/build_setup.sh",
-    "start": "npm run bundle && node build/grader.js",
+    "start": "npm run bundle && node build/grader.cjs",
     "build": "npm run bundle && npm run pack-binary",
-    "bundle": "npm run clean && cd src/ && echo $(pwd) && npx webpack && cd ../ && ./scripts/webzip.js && echo $(pwd) && npx webpack && chmod +x build/*.js",
+    "bundle": "npm run clean && cd src/ && echo $(pwd) && npx webpack && cd ../ && npm run zip && echo $(pwd) && npx webpack && chmod +x build/*.cjs",
     "pack-binary": "npm run pack-binary-nix && npm run pack-binary-win && npm run pack-binary-mac && npm run pack-binary-32",
+    "zip": "node -r esm ./scripts/webzip.js",
     "build-nix": "npm run bundle && npm run pack-binary-nix",
     "build-win": "npm run bundle && npm run pack-binary-win",
     "build-mac": "npm run bundle && npm run pack-binary-mac",
-    "pack-binary-nix": "npx nexe -t linux-x64 -o bin/grader.nix -i build/grader.js -r \"./build/*\"",
-    "pack-binary-win": "npx nexe -t windows -o bin/grader.exe -i build/grader.js -r \"./build/*\"",
-    "pack-binary-mac": "npx nexe -t macos-x64 -o bin/grader.mac -i build/grader.js -r \"./build/*\"",
-    "pack-binary-32": "npx nexe -t windows-x32 -o bin/grader.win32.exe -i build/grader.js -r \"./build/*\" && npx nexe -t linux-x32 -o bin/grader.nix32 -i build/grader.js -r \"./build/*\"",
-    "clean": "rm -rf build/ bin/ src/build/ dev/ *.log *.error || : && mkdir -p build && mkdir -p bin && mkdir -p src/build",
+    "dl-node": "npm run dl-node-nix && npm run dl-node-win && npm run dl-node-mac && npm run dl-node-32",
+    "dl-node-nix": "npx nexe -t linux-x64 -o bin/hello.nix -i src/hello.js -r \"./build/*\"",
+    "dl-node-win": "npx nexe -t windows -o bin/hello.exe -i src/hello.js -r \"./build/*\"",
+    "dl-node-mac": "npx nexe -t macos-x64 -o bin/hello.mac -i src/hello.js -r \"./build/*\"",
+    "dl-node-32": "npx nexe -t windows-x32 -o bin/hello.win32.exe -i src/hello.js -r \"./build/*\" && npx nexe -t linux-x32 -o bin/hello.nix32 -i src/hello.js -r \"./build/*\"",
+    "pack-binary-nix": "npx nexe -t linux-x64 -o bin/grader.nix -i build/grader.cjs -r \"./build/*\"",
+    "pack-binary-win": "npx nexe -t windows -o bin/grader.exe -i build/grader.cjs -r \"./build/*\"",
+    "pack-binary-mac": "npx nexe -t macos-x64 -o bin/grader.mac -i build/grader.cjs -r \"./build/*\"",
+    "pack-binary-32": "npx nexe -t windows-x32 -o bin/grader.win32.exe -i build/grader.cjs -r \"./build/*\" && npx nexe -t linux-x32 -o bin/grader.nix32 -i build/grader.cjs -r \"./build/*\"",
+    "clean": "rm -rf build/ bin/ src/build/ dev/ *.log *.error || : && mkdir -p build && mkdir -p bin",
     "pack": "upx bin/grader*",
     "test": "npm run test-app",
-    "test-svc": "node -r esm src/service.js",
-    "test-app": "npm run bundle && node build/grader.js",
+    "test-svc": "npm run debug-app && node src/service.js",
+    "debug-app": "mkdir -p ./.data/app && cp -r ./src/ui_inject ./.data/app/",
+    "test-app": "npm run bundle && node build/grader.cjs",
     "lint": "eslint 'src/**/*.js'",
     "check": "npm run lint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/c9fe/grader.git"
+    "url": "git+https://github.com/i5ik/grader.git"
   },
   "keywords": [
     "devtools",
@@ -64,12 +71,16 @@
     "grader-base",
     "grader"
   ],
-  "author": "@my-user-name",
+  "author": "@my-npm-name",
+  "built-with": {
+    "name": "GraderJS",
+    "url": "https://github.com/i5ik/graderjs"
+  },
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/c9fe/grader-base/issues"
+    "url": "https://github.com/i5ik/grader-base/issues"
   },
-  "homepage": "https://github.com/c9fe/grader-base#readme",
+  "homepage": "https://github.com/i5ik/grader-base#readme",
   "dependencies": {
     "adm-zip": "^0.4.16",
     "browser-installer": "^1.4.1",
@@ -87,7 +98,7 @@
     "esm": "^3.2.25",
     "nexe": "latest",
     "node-dev": "latest",
-    "webpack": "^5.3.2",
+    "webpack": "^5.42.0",
     "webpack-cli": "^4.1.0"
   }
 }

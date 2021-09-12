@@ -1,15 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
-const {DEBUG} = require('./src/config.js');
+const CONFIG = require('./src/config.js');
 
 module.exports = {
   entry: "./src/launcher.js",
+  mode: "production",
   output: {
-    path: path.resolve(__dirname, 'build'),
-    filename: "grader.js"
+    path: path.resolve('.', 'build'),
+    filename: "grader.cjs"
   },
   optimization: {
-    minimize: DEBUG ? false : true
+    minimize: true
   },
   target: "node",
   node: {

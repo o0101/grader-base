@@ -1,15 +1,15 @@
 const path = require('path');
-
 const CONFIG = require('./config.js');
 
 module.exports = {
   entry: CONFIG.entry || "./app.js",
+  mode: "production",
   output: {
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve('.', 'build'),
     filename: "service.js"
   },
   optimization: {
-    minimize: CONFIG.DEBUG ? false : true
+    minimize: true
   },
   target: "node",
   node: {

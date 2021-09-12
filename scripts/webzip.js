@@ -1,17 +1,26 @@
-#!/usr/bin/env node
+import path from 'path';
+import fs from 'fs';
 
-const path = require('path');
-const fs = require('fs');
+import AdmZip from 'adm-zip';
 
-const AdmZip = require('adm-zip');
+import CONFIG from '../src/config.js';
+import {APP_ROOT} from '../src/lib/common.js';
 
 const file = new AdmZip();
 
-file.addLocalFile(path.resolve(__dirname, '..', 'src', 'build', 'service.js'), 'app');
-file.addLocalFile(path.resolve(__dirname, '..', 'src', 'config.js'));
-file.addLocalFolder(path.resolve(__dirname, '..', 'src', 'public'), 'app/public');
-file.addLocalFolder(path.resolve(__dirname, '..', 'src', 'ui_inject'), 'app/ui_inject');
+console.log({APP_ROOT});
+file.addLocalFile(
+  (CONFIG.DEBUG ? 
+    path.resolve(APP_ROOT, 'build', 'service.js') 
+    :
+    path.resolve(APP_ROOT, 'src', 'build', 'service.js')
+  ), 
+  'app'
+)
+file.addLocalFile(path.resolve(APP_ROOT, 'src', 'config.js'));
+file.addLocalFolder(path.resolve(APP_ROOT, 'src', 'public'), 'app/public');
+file.addLocalFolder(path.resolve(APP_ROOT, 'src', 'ui_inject'), 'app/ui_inject');
 
-fs.writeFileSync(path.resolve(__dirname, '..', 'build', 'app.zip'), file.toBuffer());
+fs.writeFileSync(path.resolve(APP_ROOT, 'build', 'app.zip'), file.toBuffer());
 
 

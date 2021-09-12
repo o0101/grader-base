@@ -10,7 +10,7 @@
     import {createHttpTerminator} from 'http-terminator';
 
   // 3rd party customized and added to repo
-    import {launch as ChromeLaunch} from './lib/vendor/chrome-launcher.js';
+    import {launch as ChromeLaunch} from './lib/vendor/chrome-launcher.cjs';
 
   // own 
     import {install} from 'browser-installer';
@@ -19,6 +19,7 @@
     import API from './index.js';
     import CONFIG from './config.js'
     import {
+      APP_ROOT,
       newSessionId,
       DEBUG2,
       sleep, DEBUG, say,
@@ -32,10 +33,12 @@
     import bridge from './lib/api_bridge.js';
 
 // constants
-  const PORT_DEBUG = false;
+  const PROBE_SCREEN = true;
+  const TEST_SIDE = process.env.TEST_SIDE || false;
+  const PORT_DEBUG = true;
   const MAX_RETRY = 10;
   const MAX_BINDING_RETRY = 10;
-  export const SITE_PATH = path.resolve(__dirname, 'public');
+  export const SITE_PATH = path.resolve(appDir(), 'app', 'public');
   DEBUG && console.log({SITE_PATH});
   const SessionId = newSessionId();
   const BINDING_NAME = "_graderService";
@@ -93,7 +96,7 @@
         process.exit(1);
       }
 
-      safe_notify('Service started.');
+      safe_notify(`Service started: ${ServicePort}`);
       console.log(`App service started.`);
 
     // cleanup any old sessions
@@ -120,10 +123,12 @@
 
     // do layout prep if requrested
       let layout;
-      if ( settings.doLayout ) {
+      if ( settings.doLayout && PROBE_SCREEN ) {
         const {screenWidth, screenHeight} = await API.ui.getScreen({
           ServicePort, 
+          /*
           sessionId: SessionId,
+          */
           uis
         });
 
@@ -279,8 +284,12 @@
         `--no-first-run`,
         /*'--restore-last-session',*/
         `--disk-cache-dir=${temp_browser_cache(browserSessionId)}`,
-        `--aggressive-cache-discard`
+        `--aggressive-cache-discard`,
       ];
+
+      if ( TEST_SIDE ) {
+        CHROME_OPTS.push(`--headless`);
+      }
 
       if ( headless ) {
         // not really headless because we need to use the real display to collect info
@@ -317,10 +326,14 @@
 
       const LAUNCH_OPTS = {
         logLevel: DEBUG ? 'verbose' : 'silent',
-        chromeFlags:CHROME_OPTS, 
-        userDataDir:app_data_dir(browserSessionId), 
+        chromeFlags: CHROME_OPTS, 
+        userDataDir: app_data_dir(browserSessionId), 
         ignoreDefaultFlags: true,
         handleSIGINT: false
+      }
+
+      if ( headless ) {
+        LAUNCH_OPTS.startingUrl = startUrl;
       }
 
       DEBUG && console.log({LAUNCH_OPTS});
@@ -591,7 +604,7 @@
                       "Page.getFrameTree", {}, sessionId
                     );
 
-                  // create an isolate
+                  // create an isolated JS context in that frame
                     const {executionContextId} = await send("Page.createIsolatedWorld", {
                       frameId,
                       worldName: JS_CONTEXT_NAME,
@@ -600,10 +613,12 @@
                   // add a binding to it
                     if ( bindingRetryCount == 0 ) {
                       DEBUG && console.log(`Add service binding to ec ${executionContextId}`);
-                      await send("Runtime.addBinding", {
+                      const result = await send("Runtime.addBinding", {
                         name: BINDING_NAME,
-                        executionContextId
+                        /*executionContextId*/
+                        executionContextName: JS_CONTEXT_NAME
                       }, sessionId);
+                      console.log({bindingAdd:{result}});
                     }
 
                   // add the service binding script 
@@ -612,7 +627,7 @@
                     const {result, exceptionDetails} = await send("Runtime.evaluate", {
                       expression: SERVICE_BINDING_SCRIPT,
                       returnByValue: true,
-                      executionContextId
+                      contextId: executionContextId
                     }, sessionId);
 
                     DEBUG && console.log({result, exceptionDetails});

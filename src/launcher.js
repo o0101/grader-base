@@ -6,13 +6,13 @@
 
   // 3rd-party
     import AdmZip from 'adm-zip';
-    import {Launcher} from './lib/vendor/chrome-launcher.js';
+    import {Launcher} from './lib/vendor/chrome-launcher.cjs';
 
   // own 
     import {install} from 'browser-installer';
 
   // internal
-    import {DEBUG, say, sleep, appDir, logFile} from './lib/common.js';
+    import {APP_ROOT, DEBUG, say, sleep, appDir, logFile} from './lib/common.js';
 
 launchApp();
 
@@ -44,7 +44,7 @@ async function launchApp() {
     process.on('error', killService);
 
   // retrieve the app from the virtual filesystem in the build
-    const appPath = path.resolve(__dirname, '..', 'build', 'app.zip');
+    const appPath = path.resolve(APP_ROOT, 'build', 'app.zip');
     try {
       appBundle = fs.readFileSync(appPath);
     } catch(e) {
@@ -71,7 +71,7 @@ async function launchApp() {
   try {
     // create the app directory
       console.log('Preparing app data directory.');
-      const name = DEBUG ? path.resolve(appDir(), 'dev') : appDir();
+      const name = appDir();
       const zipName = path.resolve(name, 'app.zip');
       if ( ! fs.existsSync(name) ) {
         fs.mkdirSync(name, {recursive:true});

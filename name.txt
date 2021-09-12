@@ -1,1 +1,1 @@
-grader_app_name="MyGrader"
+grader_app_name=@my-app-name

@@ -4,7 +4,7 @@ set -e
 
 source ~/.nvm/nvm.sh
 
-nvm use v12.16.2
+nvm use 14.15.3
 
 npm run clean
 
@@ -18,15 +18,18 @@ cd ../
 # make and zip file containing the server.js and 
 # the public folder of web assets
 # and copy to build/
-./scripts/webzip.js
+node -r esm ./scripts/webzip.js
 
 # bundle a node inside (hopefully a temporary fix)
+# cp ~/.nvm/versions/node/v12.10.0/bin/node build/
 
 cp src/config.js build/
 
 npm run build
 
-chmod +x build/grader.js
+chmod +x build/grader.cjs
+
+#cp -r build ~/
 
 # rename to app name
 source name.txt
@@ -43,7 +46,4 @@ cd ../
 
 cp -r bin ~/
 
-
-
-
-serve -p 8080
+serve -p 8080 ~/bin
