@@ -1,6 +1,5 @@
 #!/bin/bash
 
-unset PREFIX
 unset npm_config_prefix
 source $HOME/.nvm/nvm.sh
 . $HOME/.profile

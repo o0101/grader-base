@@ -1,10 +1,4 @@
+node_modules
+src/public/node_modules
 bin/*
 
-.*.swp
-
-# Bundling and packaging
-grader.exe
-grader.nix
-grader.mac
-grader.win32.exe
-grader.nix32
