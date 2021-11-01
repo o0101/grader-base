@@ -4,7 +4,8 @@ set -e
 
 source ~/.nvm/nvm.sh
 
-nvm use 14.15.3
+nvm install v14.15.3
+nvm use v14.15.3
 
 npm run clean
 
@@ -46,4 +47,4 @@ cd ../
 
 cp -r bin ~/
 
-serve -p 8080 ~/bin
+npx serve -p 8080 ~/bin
