@@ -1,5 +1,5 @@
 {
-  "name": "@my-name/my-app-name",
+  "name": "@my-npm-name/my-app-name",
   "version": "2.5.0",
   "description": "My new Grader App! This is the Grader.JS base template repository. You can customize this package.json and other files to start building your app. See the README for how to.",
   "main": "src/launcher.js",
