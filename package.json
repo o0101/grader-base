@@ -39,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/i5ik/grader.git"
+    "url": "git+https://github.com/crisdosyago/grader.git"
   },
   "keywords": [
     "devtools",
@@ -74,13 +74,13 @@
   "author": "my-npm-name",
   "built-with": {
     "name": "GraderJS",
-    "url": "https://github.com/i5ik/graderjs"
+    "url": "https://github.com/crisdosyago/graderjs"
   },
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/i5ik/grader-base/issues"
+    "url": "https://github.com/crisdosyago/grader-base/issues"
   },
-  "homepage": "https://github.com/i5ik/grader-base#readme",
+  "homepage": "https://github.com/crisdosyago/grader-base#readme",
   "dependencies": {
     "adm-zip": "^0.4.16",
     "browser-installer": "^1.4.1",

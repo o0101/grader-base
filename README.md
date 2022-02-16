@@ -1,4 +1,4 @@
-<p align=center><img alt="Grader.JS logo image" src=https://github.com/i5ik/graderjs/raw/master/.readme-assets/grader_logo.png></p>
+<p align=center><img alt="Grader.JS logo image" src=https://github.com/crisdosyago/graderjs/raw/master/.readme-assets/grader_logo.png></p>
 
 # This is Your Readme
 
@@ -18,7 +18,7 @@ Hello world binary sizes (node is packed with upx):
  18MB Sep 12 16:47 hello.win32.exe
 ```
 
-# [Grader.JS](https://github.com/i5ik/graderjs) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fi5ik%2Fgrader-base&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Nov%209%202020&edge_flat=false)](https://hits.seeyoufarm.com) 
+# [Grader.JS](https://github.com/crisdosyago/graderjs) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fcrisdosyago%2Fgrader-base&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Nov%209%202020&edge_flat=false)](https://hits.seeyoufarm.com) 
 
 ## License 
 
@@ -33,7 +33,7 @@ This software is dual-licensed. For information about commercial licensing, see 
 **Grader.JS**, or just **Grader**, is a tool to help you build accessible, cross-platform desktop app binaries in Node.JS, JavaScript, HTML and CSS, without the bloat of Electron, the headaches of Qt or the pernicious dorsal enemas of Babylon.Perl
 # Get Started from GitHub
 
-Click ["Use This Template"](https://github.com/i5ik/grader-base) on this base-repo and you will have a new repo, then clone it to your workspace and `cd` into it, and run:
+Click ["Use This Template"](https://github.com/crisdosyago/grader-base) on this base-repo and you will have a new repo, then clone it to your workspace and `cd` into it, and run:
 
 ```sh
 npm i
@@ -41,14 +41,14 @@ npm i
 
 ## or Get Started from npm
 
-  Use npm to get the [Grader.JS tool](https://github.com/i5ik/graderjs) to automatically populate your new grader app.
+  Use npm to get the [Grader.JS tool](https://github.com/crisdosyago/graderjs) to automatically populate your new grader app.
 
   ```sh
     $ npm i -g graderjs@latest
     $ graderjs my-new-app
   ```
 
-  Then, read the [getting started guide](https://github.com/i5ik/graderjs/blob/master/README.md) or see below for an Overview and a detailed API reference.
+  Then, read the [getting started guide](https://github.com/crisdosyago/graderjs/blob/master/README.md) or see below for an Overview and a detailed API reference.
 
 ## Overview
 
@@ -210,7 +210,7 @@ npm i
 
   The default minimum binary sizes are shown below:
 
-  ![A table showing the approximate default minimum binary sizes for basic "Hello World" GUI apps built with Grader.JS. The minimum size for a Unix or Linux binary is 14.8 Mb. The minimum size for a 32-bit Unix or Linux binary is 14.2 Mb. The minimum size for a Macintosh OSX binary is 12.2 Mb. The minimum size for a Windows binary is 10.4 Mb. The minimum size for a 32-bit Windows binary is 8.5 Mb.](https://github.com/i5ik/graderjs/raw/master/.readme-assets/default%20binary%20sizes.JPG)
+  ![A table showing the approximate default minimum binary sizes for basic "Hello World" GUI apps built with Grader.JS. The minimum size for a Unix or Linux binary is 14.8 Mb. The minimum size for a 32-bit Unix or Linux binary is 14.2 Mb. The minimum size for a Macintosh OSX binary is 12.2 Mb. The minimum size for a Windows binary is 10.4 Mb. The minimum size for a 32-bit Windows binary is 8.5 Mb.](https://github.com/crisdosyago/graderjs/raw/master/.readme-assets/default%20binary%20sizes.JPG)
 
   These are the sizes of baseic `hello world` example GUI apps, and the main contribution to the size is the compressed Node.JS executable that is included in the binary package. The minified Node.JS source code has the following sizes:
 
@@ -480,7 +480,7 @@ Sleep a number of milliseconds before returning to the function. In practice the
 
 Stores a (key, value) pair in the global key-value store. Keys are strings and values can be any object. But note that if the objects are not JSON stringify-able then they will not be able to be passed across the client-service divide. Only fully JSON strinify-able values can be passed between service and client sides.
 
-Also, the `kv()` command has non-intuitive behaviour when there is an existing key. It attempts to perform a pseudo merge, depending on the type of the value. For more details, see the code in, for example, [this revision](https://github.com/i5ik/grader-base/blob/master/src/index.js#L473).
+Also, the `kv()` command has non-intuitive behaviour when there is an existing key. It attempts to perform a pseudo merge, depending on the type of the value. For more details, see the code in, for example, [this revision](https://github.com/crisdosyago/grader-base/blob/master/src/index.js#L473).
 
 #### .util.k(key)
 
